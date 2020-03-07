@@ -1,0 +1,6 @@
+  <launch>
+   <!-- Load the urdf into the parameter server. -->
+   <node name="tf2_broadcaster" pkg="dh_transformation_visualization" type="broadcaster.py" respawn="false" output="screen" />
+   <node name="rviz" pkg="rviz" type="rviz" args="-d $(find DH_transformation_visualization)/config/rviz_config.rviz"/>
+  </launch>
+
