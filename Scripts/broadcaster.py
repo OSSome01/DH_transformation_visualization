@@ -53,7 +53,7 @@ if __name__ == "__main__":
             link3_to_link2.sendTransform((dummy_a3, 0, 0), link3_orientation, rospy.Time.now(), "link3", "link2")
             link4_to_link3.sendTransform((0, 0, d4), link4_orientation, rospy.Time.now(), "link4", "link3")
             
-            # Alingning base and link1
+            # Tracing from base and link1
             if new_d1 < d1:
                 new_d1 = new_d1 + 0.005
                 rospy.sleep(0.1)
@@ -68,7 +68,7 @@ if __name__ == "__main__":
                 new_link1_orientation = tf.transformations.quaternion_from_euler(new_alpha1, 0, 0)
                 mobile1_to_link1.sendTransform((0, 0, new_d1), new_link1_orientation, rospy.Time.now(), "mobile1", "base")            
             
-            # Alingning link1 and link2
+            # Tracing from link1 and link2
             if new_alpha1 >= alpha1 and new_d1 >= d1 and new_a2 < a2 :            
                 print("mobile2_to_link2")
                 if new_a2 < a2:
@@ -77,7 +77,7 @@ if __name__ == "__main__":
                     print("new_a2 updated", new_a2)
                     mobile2_to_link2.sendTransform((new_a2, 0, 0), link2_orientation, rospy.Time.now(), "mobile2", "link1")
                 
-            # Alingning link2 and link3
+            # Tracing from link2 and link3
             if new_alpha1 >= alpha1 and new_d1 >= d1 and new_a2 >= a2 :            
                 print("mobile3_to_link3")
                 if new_theta3 < theta3:
@@ -94,7 +94,7 @@ if __name__ == "__main__":
                     rospy.sleep(0.1)
                     print("new_alpha3 updated", new_alpha3)
             
-            # Alingning link3 and link4
+            # Tracing from link3 and link4
             if new_alpha1 >= alpha1 and new_d1 >= d1 and new_a2 >= a2 and new_theta3 >= theta3 and new_alpha3 >= alpha3 and new_d4 < d4:
                      new_d4 = new_d4 + 0.005
                      rospy.sleep(0.1)
