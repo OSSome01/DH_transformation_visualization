@@ -36,6 +36,8 @@ if __name__ == "__main__":
     new_theta3 = 0
     alpha3 = math.pi/2
     new_alpha3 = 0
+    dummy_a3 = 0.1
+    new_dummy_a3 = 0
     link3_orientation = tf.transformations.quaternion_from_euler(alpha3, 0, theta3)
 
     #DH parameters for link 4
@@ -48,21 +50,21 @@ if __name__ == "__main__":
             #Transform data is sent 
             link1_to_base.sendTransform((0, 0, d1), link1_orientation, rospy.Time.now(), "link1", "base")
             link2_to_link1.sendTransform((a2, 0, 0), link2_orientation, rospy.Time.now(), "link2", "link1")
-            link3_to_link2.sendTransform((0.2, 0, 0), link3_orientation, rospy.Time.now(), "link3", "link2")
+            link3_to_link2.sendTransform((dummy_a3, 0, 0), link3_orientation, rospy.Time.now(), "link3", "link2")
             link4_to_link3.sendTransform((0, 0, d4), link4_orientation, rospy.Time.now(), "link4", "link3")
             
             # Alingning base and link1
-            if new_alpha1 < alpha1:
+            if new_d1 < d1:
+                new_d1 = new_d1 + 0.005
+                rospy.sleep(0.1)
+                print("new_d1 updated", new_d1)
+                new_link1_orientation = tf.transformations.quaternion_from_euler(new_alpha1, 0, 0)
+                mobile1_to_link1.sendTransform((0, 0, new_d1), new_link1_orientation, rospy.Time.now(), "mobile1", "base")            
+            if new_alpha1 < alpha1 and new_d1>= d1:
                 print("mobile1_to_link1")
                 new_alpha1 = new_alpha1 + 0.015
                 rospy.sleep(0.1)
                 print("new_alpha1 updated", new_alpha1)
-                new_link1_orientation = tf.transformations.quaternion_from_euler(new_alpha1, 0, 0)
-                mobile1_to_link1.sendTransform((0, 0, new_d1), new_link1_orientation, rospy.Time.now(), "mobile1", "base")            
-            if new_alpha1 >= alpha1 and new_d1 < d1:
-                new_d1 = new_d1 + 0.005
-                rospy.sleep(0.1)
-                print("new_d1 updated", new_d1)
                 new_link1_orientation = tf.transformations.quaternion_from_euler(new_alpha1, 0, 0)
                 mobile1_to_link1.sendTransform((0, 0, new_d1), new_link1_orientation, rospy.Time.now(), "mobile1", "base")            
             
@@ -86,8 +88,9 @@ if __name__ == "__main__":
                     print("new_theta3 updated", new_theta3)
                 if new_alpha3 < alpha3 and new_theta3 >= theta3:
                     new_alpha3 = new_alpha3 + 0.015
+                    new_dummy_a3 = new_dummy_a3 + 0.00095493
                     new_link3_orientation = tf.transformations.quaternion_from_euler(new_alpha3, 0, new_theta3)
-                    mobile3_to_link3.sendTransform((0, 0, 0), new_link3_orientation, rospy.Time.now(), "mobile3", "link2")
+                    mobile3_to_link3.sendTransform((new_dummy_a3, 0, 0), new_link3_orientation, rospy.Time.now(), "mobile3", "link2")
                     rospy.sleep(0.1)
                     print("new_alpha3 updated", new_alpha3)
             
@@ -107,6 +110,7 @@ if __name__ == "__main__":
                 new_theta3 = 0
                 new_alpha3 = 0
                 new_d4 = 0
+                new_dummy_a3 = 0
 
         except:
             continue
